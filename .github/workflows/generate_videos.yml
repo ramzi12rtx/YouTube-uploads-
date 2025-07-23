@@ -1,34 +1,33 @@
 name: Generate YouTube Shorts
 
 on:
-  schedule:
-    - cron: '0 0 * * *'  # تشغيل يومي في منتصف الليل
-  workflow_dispatch:     # تشغيل يدوي
+  workflow_dispatch:
 
 jobs:
   generate:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.10'
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
 
-    - name: Install dependencies
-      run: |
-        pip install -r requirements.txt
-        sudo apt-get install ffmpeg -y
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          sudo apt-get install ffmpeg -y
 
-    - name: Run video generator
-      env:
-        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-      run: python src/main.py
+      - name: Run video generator
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: python src/main.py
 
-    - name: Upload generated videos
-      uses: actions/upload-artifact@v3
-      with:
-        name: youtube-shorts
-        path: outputs/
+      - name: Upload generated videos
+        uses: actions/upload-artifact@v4  # ⬅️ الإصدار المحدث
+        with:
+          name: youtube-shorts
+          path: outputs/
+          retention-days: 1  # احتفظ بالملفات ليوم واحد فقط
