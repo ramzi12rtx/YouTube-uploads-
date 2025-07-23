@@ -1,22 +1,17 @@
 name: Generate YouTube Shorts
 
 on:
-  workflow_dispatch:  # تشغيل يدوي
+  workflow_dispatch:
   schedule:
-    - cron: '0 12 * * *'  # تشغيل يومي الساعة 12 ظهراً (UTC)
+    - cron: '0 12 * * *'
 
 jobs:
   generate:
     runs-on: ubuntu-22.04
     
-    permissions:
-      contents: write
-      actions: write
-      
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        
+      - uses: actions/checkout@v4
+      
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -27,30 +22,20 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y ffmpeg
           
-      - name: Install Python package
+      - name: Install Python dependencies
         run: |
+          pip install --upgrade pip
           pip install -e .
           pip install -r requirements.txt
           
-      - name: Generate videos
+      - name: Run video generator
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: |
-          python -m src.main
+        run: python -m src.main
           
-      - name: Upload generated videos
+      - name: Upload videos
         uses: actions/upload-artifact@v4
         with:
           name: youtube-shorts
           path: outputs/
-          retention-days: 3  # احتفظ بالفيديوهات لمدة 3 أيام
-          
-      - name: Commit and push changes (اختياري)
-        if: success()
-        run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
-          git add outputs/
-          git commit -m "Auto-generated videos [skip ci]"
-          git push
-        
+          retention-days: 3
