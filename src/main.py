@@ -1,6 +1,6 @@
 import os
 from src.audio_generator import text_to_speech, generate_script
-from src.video_generator import generate_video
+from .video_generator import generate_video  # النقطة مهمة هنا
 from src.image_generator import generate_images
 from src.utils import create_output_dirs
 from config.settings import Settings
