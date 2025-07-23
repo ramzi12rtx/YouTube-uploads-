@@ -1,8 +1,8 @@
 import os
 from src.audio_generator import text_to_speech, generate_script
-from src.image_generator import generate_images
 from src.video_generator import generate_video
-from src.utils import create_output_dirs, get_timestamp
+from src.image_generator import generate_images
+from src.utils import create_output_dirs
 from config.settings import Settings
 
 def main():
