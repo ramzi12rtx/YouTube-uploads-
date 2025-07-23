@@ -2,6 +2,7 @@ from audio_generator import text_to_speech, generate_script
 from video_generator import generate_video
 from image_generator import generate_images
 from utils import create_output_dirs
+from src.config.settings import Settings
 import os
 
 def main():
