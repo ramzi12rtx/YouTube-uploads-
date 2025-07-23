@@ -15,15 +15,16 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
-          sudo apt-get install ffmpeg -y
+      -name: Install package
+  run: |
+    pip install -e .
+    # أو بدلاً من ذلك:
+    # export PYTHONPATH="${PYTHONPATH}:${{ github.workspace }}"
 
-      - name: Run video generator
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: python src/main.py
+- name: Run generator
+  env:
+    OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+  run: python -m src.main  # التشغيل كوحدة
 
       - name: Upload generated videos
         uses: actions/upload-artifact@v4  # ⬅️ الإصدار المحدث
