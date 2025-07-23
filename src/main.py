@@ -1,37 +1,28 @@
+from audio_generator import text_to_speech, generate_script
+from video_generator import generate_video
+from image_generator import generate_images
+from utils import create_output_dirs
 import os
-from src.audio_generator import text_to_speech, generate_script
-from .video_generator import generate_video  # النقطة مهمة هنا
-from src.image_generator import generate_images
-from src.utils import create_output_dirs
-from config.settings import Settings
 
 def main():
     create_output_dirs()
     
-    for topic in Settings.VIDEO_TOPICS:
+    topics = [
+        "تأثير الذكاء الاصطناعي على التعليم",
+        "أحدث تطورات التكنولوجيا الطبية"
+    ]
+    
+    for topic in topics:
         try:
-            print(f"جاري إنشاء فيديو عن: {topic}")
-            
-            # توليد النص
+            print(f"جارٍ إنشاء فيديو عن: {topic}")
             script = generate_script(topic)
-            print(f"تم توليد النص: {script[:50]}...")
-            
-            # توليد الصوت
             audio_path = text_to_speech(script, "ar")
-            print(f"تم توليد الصوت: {audio_path}")
-            
-            # توليد الصور
-            image_paths = generate_images(topic, count=5)
-            print(f"تم توليد {len(image_paths)} صور")
-            
-            # توليد الفيديو
-            timestamp = get_timestamp()
-            output_path = os.path.join(Settings.VIDEO_OUTPUT_DIR, f"{topic.replace(' ', '_')}_{timestamp}.mp4")
-            video_path = generate_video(image_paths, audio_path, output_path)
-            print(f"تم إنشاء الفيديو: {video_path}")
-            
+            image_paths = generate_images(topic, count=3)
+            output_path = os.path.join("outputs", f"{topic.replace(' ', '_')}.mp4")
+            generate_video(image_paths, audio_path, output_path)
+            print(f"تم إنشاء الفيديو: {output_path}")
         except Exception as e:
-            print(f"خطأ في إنشاء فيديو عن {topic}: {str(e)}")
+            print(f"خطأ: {str(e)}")
 
 if __name__ == "__main__":
     main()
